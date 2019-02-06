@@ -5,7 +5,7 @@
 module type SEQ = sig
 
   (* ['a seq] is the type of sequence whose elements have type ['a]. *)
-  type +'a seq
+  type 'a seq
 
   (* Constructors. *)
 
