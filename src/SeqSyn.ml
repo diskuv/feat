@@ -67,8 +67,14 @@ let out_of_bounds () =
 let empty =
   Empty
 
+let zero =
+  empty
+
 let singleton x =
   Singleton x
+
+let one =
+  singleton
 
 let sum s1 s2 =
   if is_empty s1 then

@@ -42,11 +42,17 @@ let empty =
   and foreach _k = () in
   { length; get; foreach }
 
+let zero =
+  empty
+
 let singleton x =
   let length = Z.one
   and get i = if Z.equal i Z.zero then x else out_of_bounds()
   and foreach k = k x in
   { length; get; foreach }
+
+let one =
+  singleton
 
 let sum s1 s2 =
   let length =

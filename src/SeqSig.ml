@@ -11,9 +11,11 @@ module type SEQ = sig
 
   (* [empty] is a sequence of length zero. *)
   val empty: 'a seq
+  val zero : 'a seq
 
   (* [singleton x] is sequence of length one whose single element is [x]. *)
   val singleton: 'a -> 'a seq
+  val one:       'a -> 'a seq
 
   (* [sum s1 s2] is the concatenation of the sequences [s1] and [s2]. *)
   val sum    : 'a seq -> 'a seq -> 'a seq

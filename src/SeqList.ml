@@ -12,8 +12,14 @@ type 'a seq =
 let empty =
   []
 
+let zero =
+  empty
+
 let singleton x =
   [x]
+
+let one =
+  singleton
 
 let sum =
   (@)
