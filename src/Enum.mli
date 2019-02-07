@@ -50,3 +50,13 @@ val map: ('a -> 'b) -> 'a enum -> 'b enum
 (* The enumeration [finite xs] contains the elements in the list [xs].
    They are considered to have size zero. *)
 val finite: 'a list -> 'a enum
+
+(* [bool] is the enumeration [false; true]. *)
+val bool: bool enum
+
+(* If [elem] is an enumeration of the type ['a], then [list elem] is an
+   enumeration of the type ['a list]. It is worth noting that every call
+   to [list elem] produces a fresh memoizing function, so (if possible)
+   one should avoid applying [list] twice to the same argument; that
+   would be a waste of time and space. *)
+val list: 'a enum -> 'a list enum

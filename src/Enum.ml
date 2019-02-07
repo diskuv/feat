@@ -1,3 +1,7 @@
+(* -------------------------------------------------------------------------- *)
+
+(* Core combinators. *)
+
 type 'a enum =
   int -> 'a Seq.seq
 
@@ -65,5 +69,21 @@ let map (phi : 'a -> 'b) (enum : 'a enum) : 'b enum =
   fun s ->
     Seq.map phi (enum s)
 
+(* -------------------------------------------------------------------------- *)
+
+(* Convenience functions. *)
+
+open Fix.Memoize.Int
+
 let finite (xs : 'a list) : 'a enum =
   List.fold_left (++) zero (List.map just xs)
+
+let bool : bool enum =
+  just false ++ just true
+  (* also: [finite [false; true]] *)
+
+let list (elem : 'a enum) : 'a list enum =
+  let cons (x, xs) = x :: xs in
+  fix (fun list ->
+    just [] ++ pay (map cons (elem ** list))
+  )
