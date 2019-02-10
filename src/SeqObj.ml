@@ -10,12 +10,14 @@ module Make (Z : sig
   type t
   val zero: t
   val one: t
+  val succ: t -> t
   val add: t -> t -> t
   val sub: t -> t -> t
   val mul: t -> t -> t
   val div_rem: t -> t -> t * t
   val equal: t -> t -> bool
   val lt: t -> t -> bool
+  val leq: t -> t -> bool
 end) = struct
 
 type index =
@@ -118,6 +120,26 @@ let map phi s =
     empty
   else
     map phi s
+
+let up a b =
+  if Z.lt a b then
+    let length = Z.sub b a
+    and get i =
+      let x = Z.add a i in
+      if Z.lt x a || Z.leq b x then
+        out_of_bounds()
+      else
+        x
+    and foreach k =
+      let i = ref a in
+      while Z.lt !i b do
+        k !i;
+        i := Z.succ !i
+      done
+    in
+    { length; get; foreach }
+  else
+    empty
 
 let length s =
   s.length

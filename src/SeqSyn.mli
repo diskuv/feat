@@ -11,11 +11,13 @@ module Make (Z : sig
   type t
   val zero: t
   val one: t
+  val succ: t -> t
   val add: t -> t -> t
   val sub: t -> t -> t
   val mul: t -> t -> t
   val div_rem: t -> t -> t * t
   val equal: t -> t -> bool
   val lt: t -> t -> bool
+  val leq: t -> t -> bool
 end)
 : SEQ with type index = Z.t

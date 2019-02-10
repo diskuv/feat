@@ -12,12 +12,14 @@ module Make (Z : sig
   type t
   val zero: t
   val one: t
+  val succ: t -> t
   val add: t -> t -> t
   val sub: t -> t -> t
   val mul: t -> t -> t
   val div_rem: t -> t -> t * t
   val equal: t -> t -> bool
   val lt: t -> t -> bool
+  val leq: t -> t -> bool
 end) = struct
 
 type index =
@@ -28,12 +30,15 @@ type index =
 
 (* The children of [Sum], [Product], [Map] cannot be [Empty]. *)
 
+(* In [Up (a, b)], we require [a < b], so the sequence is nonempty. *)
+
 type _ seq =
 | Empty    : 'a seq
 | Singleton: 'a -> 'a seq
 | Sum      : index * 'a seq * 'a seq -> 'a seq
 | Product  : index * 'a seq * 'b seq -> ('a * 'b) seq
 | Map      : index * ('a -> 'b) * 'a seq -> 'b seq
+| Up       : index * index -> index seq
 
 let is_empty (type a) (s : a seq) : bool =
   match s with
@@ -46,6 +51,8 @@ let is_empty (type a) (s : a seq) : bool =
   | Product _ ->
       false
   | Map _ ->
+      false
+  | Up _ ->
       false
 
 let length (type a) (s : a seq) : index =
@@ -60,6 +67,8 @@ let length (type a) (s : a seq) : index =
       length
   | Map (length, _, _) ->
       length
+  | Up (a, b) ->
+      Z.sub b a
 
 let out_of_bounds () =
   failwith "Index is out of bounds."
@@ -104,6 +113,12 @@ let map phi s =
   else
     Map (length s, phi, s)
 
+let up a b =
+  if Z.lt a b then
+    Up (a, b)
+  else
+    Empty
+
 let rec get : type a . a seq -> index -> a =
   fun s i ->
     match s with
@@ -120,6 +135,12 @@ let rec get : type a . a seq -> index -> a =
         get s1 q, get s2 r
     | Map (_, phi, s) ->
         phi (get s i)
+    | Up (a, b) ->
+        let x = Z.add a i in
+        if Z.lt x a || Z.leq b x then
+          out_of_bounds()
+        else
+          x
 
 let rec foreach : type a . a seq -> (a -> unit) -> unit =
   fun s k ->
@@ -139,5 +160,11 @@ let rec foreach : type a . a seq -> (a -> unit) -> unit =
         )
     | Map (_, phi, s) ->
         foreach s (fun x -> k (phi x))
+    | Up (a, b) ->
+        let i = ref a in
+        while Z.lt !i b do
+          k !i;
+          i := Z.succ !i
+        done
 
 end

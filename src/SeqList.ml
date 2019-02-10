@@ -40,6 +40,12 @@ let ( ** ) =
 let map =
   List.map
 
+let rec up i j =
+  if i < j then
+    i :: up (i + 1) j
+  else
+    []
+
 let length =
   List.length
 
