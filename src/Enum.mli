@@ -19,9 +19,13 @@ type 'a enum =
 val empty: 'a enum
 val zero : 'a enum
 
-(* The enumeration [just x] contains just the element [x], whose size is
-   considered to be zero. *)
+(* The enumeration [just x] contains just the element [x].
+   Its size is considered to be zero. *)
 val just: 'a -> 'a enum
+
+(* The enumeration [enum x] contains the elements in the sequence [xs].
+   Their size is considered to be zero. *)
+val enum: 'a Seq.seq -> 'a enum
 
 (* The enumeration [pay e] contains the same elements as [e],
    but their size is increased by one. *)

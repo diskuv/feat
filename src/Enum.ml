@@ -12,7 +12,12 @@ let empty : 'a enum =
 let zero =
   empty
 
+let enum (xs : 'a Seq.seq) : 'a enum =
+  fun s ->
+    if s = 0 then xs else Seq.empty
+
 let just (x : 'a) : 'a enum =
+  (* enum (Seq.singleton x) *)
   fun s ->
     if s = 0 then Seq.singleton x else Seq.empty
 
