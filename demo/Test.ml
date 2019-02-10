@@ -8,10 +8,10 @@ open Feat.Enum
 
 type tree =
   | Leaf
-  | Node of tree * tree
+  | Node of int * tree * tree
 
-let node (t1, t2) =
-  Node (t1, t2)
+let node (x, (t1, t2)) =
+  Node (x, t1, t2)
 
 (* -------------------------------------------------------------------------- *)
 
@@ -19,20 +19,30 @@ let node (t1, t2) =
 
 let tree : tree enum =
   fix (fun tree ->
-    just Leaf ++ pay (map node (tree ** tree))
+    just Leaf ++ pay (map node (just 0 ** tree ** tree))
   )
 
 (* Enumerating weight-balanced binary trees. *)
 
 let wb_tree : tree enum =
   fix (fun tree ->
-    just Leaf ++ pay (map node (tree -**- tree))
+    just Leaf ++ pay (map node (just 0 ** (tree *-* tree)))
   )
 
 (* Enumerating lists of weight-balanced binary trees. *)
 
 let list_wb_tree : tree list enum =
   list wb_tree
+
+(* Enumerating binary trees with two elements in [0; 1]. *)
+
+let elem : int enum =
+  enum (Feat.Seq.up 0 2)
+
+let etree : tree enum =
+  fix (fun tree ->
+    just Leaf ++ pay (map node (elem ** tree ** tree))
+  )
 
 (* -------------------------------------------------------------------------- *)
 
@@ -78,8 +88,9 @@ let test name s =
 (* Main. *)
 
 let () =
-  for s = 0 to 10 do
+  for s = 0 to 8 do
     test (sprintf "trees of size %d" s) (tree s);
     test (sprintf "balanced trees of size %d" s) (wb_tree s);
-    test (sprintf "lists of balanced trees of size %d" s) (list_wb_tree s)
+    test (sprintf "lists of balanced trees of size %d" s) (list_wb_tree s);
+    test (sprintf "trees of size %d with elements in [0; 1]" s) (etree s);
   done

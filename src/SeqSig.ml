@@ -7,10 +7,6 @@ module type SEQ = sig
   (* ['a seq] is the type of sequence whose elements have type ['a]. *)
   type 'a seq
 
-  (* The type [index] is the type of integers used to represent indices and
-     lengths. *)
-  type index
-
   (* Constructors. *)
 
   (* [empty] is a sequence of length zero. *)
@@ -40,9 +36,13 @@ module type SEQ = sig
 
   (* [up i j] is the sequence of the integers from [i] included up to [j]
      excluded. *)
-  val up: index -> index -> index seq
+  val up: int -> int -> int seq
 
   (* Observations. *)
+
+  (* The type [index] is the type of integers used to represent indices and
+     lengths. *)
+  type index
 
   (* [length s] is the length of the sequence [s]. *)
   val length: 'a seq -> index

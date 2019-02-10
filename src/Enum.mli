@@ -45,7 +45,7 @@ val ( ** ) : 'a enum -> 'b enum -> ('a * 'b) enum
    where the sizes of the left-hand and right-hand pair components must
    differ by at most one. *)
 val balanced_product: 'a enum -> 'b enum -> ('a * 'b) enum
-val (-**-)          : 'a enum -> 'b enum -> ('a * 'b) enum
+val ( *-* )         : 'a enum -> 'b enum -> ('a * 'b) enum
 
 (* [map phi e] is the image of the enumeration [e] through the function [phi].
    It is up to the user to ensure that [phi] is injective. *)

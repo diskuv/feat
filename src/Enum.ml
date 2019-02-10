@@ -67,7 +67,7 @@ let balanced_product (enum1 : 'a enum) (enum2 : 'b enum) : ('a * 'b) enum =
         (Seq.product (enum1 s) (enum2 (s+1)))
         (Seq.product (enum1 (s+1)) (enum2 s))
 
-let ( -**- ) =
+let ( *-* ) =
   balanced_product
 
 let map (phi : 'a -> 'b) (enum : 'a enum) : 'b enum =
