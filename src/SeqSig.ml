@@ -4,7 +4,7 @@
 
 module type SEQ = sig
 
-  (* ['a seq] is the type of sequence whose elements have type ['a]. *)
+  (* ['a seq] is the type of sequences whose elements have type ['a]. *)
   type 'a seq
 
   (* Constructors. *)
@@ -13,7 +13,7 @@ module type SEQ = sig
   val empty: 'a seq
   val zero : 'a seq
 
-  (* [singleton x] is sequence of length one whose single element is [x]. *)
+  (* [singleton x] is a sequence of length one whose single element is [x]. *)
   val singleton: 'a -> 'a seq
   val one:       'a -> 'a seq
 
