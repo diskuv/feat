@@ -21,6 +21,9 @@ let singleton x =
 let one =
   singleton
 
+let rev =
+  List.rev
+
 let sum =
   (@)
 

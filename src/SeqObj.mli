@@ -13,6 +13,7 @@ module Make (Z : sig
   val zero: t
   val one: t
   val of_int: int -> t
+  val pred: t -> t
   val add: t -> t -> t
   val sub: t -> t -> t
   val mul: t -> t -> t

@@ -17,6 +17,9 @@ module type SEQ = sig
   val singleton: 'a -> 'a seq
   val one:       'a -> 'a seq
 
+  (* [rev xs] is the reverse of the sequence [xs]. *)
+  val rev: 'a seq -> 'a seq
+
   (* [sum s1 s2] is the concatenation of the sequences [s1] and [s2]. *)
   val sum    : 'a seq -> 'a seq -> 'a seq
   val ( ++ ) : 'a seq -> 'a seq -> 'a seq

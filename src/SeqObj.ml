@@ -11,6 +11,7 @@ module Make (Z : sig
   val zero: t
   val one: t
   val of_int: int -> t
+  val pred: t -> t
   val add: t -> t -> t
   val sub: t -> t -> t
   val mul: t -> t -> t
@@ -27,10 +28,14 @@ type index =
 (* A sequence stores its length (which is computed at construction time)
    as well as [get] and [foreach] methods. *)
 
+(* The [foreach] method takes a Boolean sense as a parameter. This allows
+   us to easily implement the [foreach] method of a reversed sequence, as
+   produced by the [rev] combinator. *)
+
 type 'a seq = {
   length : index;
   get    : index -> 'a;
-  foreach: ('a -> unit) -> unit;
+  foreach: bool -> ('a -> unit) -> unit;
 }
 
 let is_empty s =
@@ -42,7 +47,7 @@ let out_of_bounds () =
 let empty =
   let length = Z.zero
   and get _ = out_of_bounds()
-  and foreach _k = () in
+  and foreach _sense _k = () in
   { length; get; foreach }
 
 let zero =
@@ -51,11 +56,21 @@ let zero =
 let singleton x =
   let length = Z.one
   and get i = if Z.equal i Z.zero then x else out_of_bounds()
-  and foreach k = k x in
+  and foreach _sense k = k x in
   { length; get; foreach }
 
 let one =
   singleton
+
+let rev s =
+  let length =
+    s.length
+  and get i =
+    s.get (Z.sub (Z.pred s.length) i)
+  and foreach sense k =
+    s.foreach (not sense) k
+  in
+  { length; get; foreach }
 
 let sum s1 s2 =
   let length =
@@ -63,9 +78,15 @@ let sum s1 s2 =
   and get i =
     if Z.lt i s1.length then s1.get i
     else s2.get (Z.sub i s1.length)
-  and foreach k =
-    s1.foreach k;
-    s2.foreach k
+  and foreach sense k =
+    if sense then begin
+      s1.foreach sense k;
+      s2.foreach sense k
+    end
+    else begin
+      s2.foreach sense k;
+      s1.foreach sense k
+    end
   in
   { length; get; foreach }
 
@@ -88,9 +109,9 @@ let product s1 s2 =
   and get i =
     let q, r = Z.div_rem i s2.length in
     s1.get q, s2.get r
-  and foreach k =
-    s1.foreach (fun x1 ->
-      s2.foreach (fun x2 ->
+  and foreach sense k =
+    s1.foreach sense (fun x1 ->
+      s2.foreach sense (fun x2 ->
         k (x1, x2)
       )
     )
@@ -112,7 +133,7 @@ let ( ** ) =
 let map phi s =
   let length = s.length
   and get i = phi (s.get i)
-  and foreach k = s.foreach (fun x -> k (phi x)) in
+  and foreach sense k = s.foreach sense (fun x -> k (phi x)) in
   { length; get; foreach }
 
 let map phi s =
@@ -135,10 +156,15 @@ let up a b =
             out_of_bounds()
           else
             x
-    and foreach k =
-      for x = a to b - 1 do
-        k x
-      done
+    and foreach sense k =
+      if sense then
+        for x = a to b - 1 do
+          k x
+        done
+      else
+        for x = b - 1 downto a do
+          k x
+        done
     in
     { length; get; foreach }
   else
@@ -151,6 +177,6 @@ let get s i =
   s.get i
 
 let foreach s k =
-  s.foreach k
+  s.foreach true k
 
 end

@@ -13,6 +13,7 @@ module Make (Z : sig
   val zero: t
   val one: t
   val of_int: int -> t
+  val pred: t -> t
   val add: t -> t -> t
   val sub: t -> t -> t
   val mul: t -> t -> t
@@ -26,8 +27,10 @@ end) = struct
 type index =
   Z.t
 
-(* The data constructors [Sum], [Product], [Map] are annotated with the
+(* The data constructors [Rev], [Sum], [Product], [Map] are annotated with the
    length of the sequence. *)
+
+(* The child of [Rev] cannot be [Empty], [Singleton], or [Rev]. *)
 
 (* The children of [Sum], [Product], [Map] cannot be [Empty]. *)
 
@@ -36,6 +39,7 @@ type index =
 type _ seq =
 | Empty    : 'a seq
 | Singleton: 'a -> 'a seq
+| Rev      : index * 'a seq -> 'a seq
 | Sum      : index * 'a seq * 'a seq -> 'a seq
 | Product  : index * 'a seq * 'b seq -> ('a * 'b) seq
 | Map      : index * ('a -> 'b) * 'a seq -> 'b seq
@@ -46,6 +50,8 @@ let is_empty (type a) (s : a seq) : bool =
   | Empty ->
       true
   | Singleton _ ->
+      false
+  | Rev _ ->
       false
   | Sum _ ->
       false
@@ -62,6 +68,8 @@ let length (type a) (s : a seq) : index =
       Z.zero
   | Singleton _ ->
       Z.one
+  | Rev (length, _) ->
+      length
   | Sum (length, _, _) ->
       length
   | Product (length, _, _) ->
@@ -85,6 +93,23 @@ let singleton x =
 
 let one =
   singleton
+
+let rev (type a) (s : a seq) : a seq =
+  match s with
+  | Empty ->
+      s
+  | Singleton _ ->
+      s
+  | Rev (_, s) ->
+      s
+  | Sum _ ->
+      Rev (length s, s)
+  | Product _ ->
+      Rev (length s, s)
+  | Map _ ->
+      Rev (length s, s)
+  | Up _ ->
+      Rev (length s, s)
 
 let sum s1 s2 =
   if is_empty s1 then
@@ -128,6 +153,8 @@ let rec get : type a . a seq -> index -> a =
         out_of_bounds()
     | Singleton x ->
         if Z.equal i Z.zero then x else out_of_bounds()
+    | Rev (n, s) ->
+        get s (Z.sub (Z.pred n) i)
     | Sum (_, s1, s2) ->
         let n1 = length s1 in
         if Z.lt i n1 then get s1 i
@@ -148,27 +175,43 @@ let rec get : type a . a seq -> index -> a =
             else
               x
 
-let rec foreach : type a . a seq -> (a -> unit) -> unit =
-  fun s k ->
+let rec foreach : type a . a seq -> bool -> (a -> unit) -> unit =
+  fun s sense k ->
     match s with
     | Empty ->
         ()
     | Singleton x ->
         k x
+    | Rev (_, s) ->
+        foreach s (not sense) k
     | Sum (_, s1, s2) ->
-        foreach s1 k;
-        foreach s2 k
+        if sense then begin
+          foreach s1 sense k;
+          foreach s2 sense k
+        end
+        else begin
+          foreach s2 sense k;
+          foreach s1 sense k
+        end
     | Product (_, s1, s2) ->
-        foreach s1 (fun x1 ->
-          foreach s2 (fun x2 ->
+        foreach s1 sense (fun x1 ->
+          foreach s2 sense (fun x2 ->
             k (x1, x2)
           )
         )
     | Map (_, phi, s) ->
-        foreach s (fun x -> k (phi x))
+        foreach s sense (fun x -> k (phi x))
     | Up (a, b) ->
-        for x = a to b - 1 do
-          k x
-        done
+        if sense then
+          for x = a to b - 1 do
+            k x
+          done
+        else
+          for x = b - 1 downto a do
+            k x
+          done
+
+let foreach s f =
+  foreach s true f
 
 end
