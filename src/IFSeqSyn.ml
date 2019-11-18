@@ -209,23 +209,37 @@ let rec foreach : type a . a seq -> bool -> (a -> unit) -> unit =
 let foreach s f =
   foreach s true f
 
-module SSeq = struct
+(* In order to avoid concatenation [Seq.concat] and flattening [Seq.flat_map],
+   a producer of a sequence of type ['a Seq.t] must be parameterized over a
+   construction function [cons] and a continuation [k]. Thus, a producer has
+   a type of the following form: *)
 
-  include Stdlib.Seq
+type ('a, 'b) producer =
+  ('a -> 'b Seq.t -> 'b Seq.t) -> 'b Seq.t -> 'b Seq.t
 
-  let cons x xs =
-    fun () -> Cons (x, xs)
+(* [interval sense a b] produces the sequence of integers between [a] included
+   and [b] excluded. If [sense] is [true], this sequence is produced in
+   ascending order; otherwise, it is produced in descending order. *)
 
-end
+let rec interval sense a b : (int, 'b) producer =
+  fun cons k ->
+    if a < b then
+      (* Compute the first element [x] and the parameters [a] and [b]
+         of the recursive call. *)
+      let x, a, b = if sense then a, a+1, b else b-1, a, b-1 in
+      (* Produce [x] and delay the recursive call. *)
+      cons x (fun () -> interval sense a b cons k ())
+    else
+      k
 
-let rec interval sense a b cons k =
-  if a < b then
-    let x, a, b = if sense then a, a+1, b else b-1, a, b-1 in
-    cons x (fun () -> interval sense a b cons k ())
-  else
-    k
+(* [to_seq s sense] produces the sequence [s]. If [sense] is [true], then this
+   sequence is produced in order; otherwise, it is produced in reverse order. *)
 
-let rec to_seq : type a b . a seq -> bool -> (a -> b SSeq.t -> b SSeq.t) -> b SSeq.t -> b SSeq.t =
+(* Parameterizing this definition with [cons] and [k] allows us to avoid using
+   [Seq.concat] and [Seq.flat_map]. Without these parameters, the treatment of
+   sums and products would require calls to these higher-order functions. *)
+
+let rec to_seq : type a b . a seq -> bool -> (a, b) producer =
   fun s sense cons k ->
     match s with
     | Empty ->
@@ -248,7 +262,10 @@ let rec to_seq : type a b . a seq -> bool -> (a -> b SSeq.t -> b SSeq.t) -> b SS
     | Up (a, b) ->
         interval sense a b cons k
 
+let cons x xs =
+  fun () -> Seq.Cons (x, xs)
+
 let to_seq s =
-  to_seq s true SSeq.cons SSeq.empty
+  to_seq s true cons Seq.empty
 
 end

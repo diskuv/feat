@@ -65,4 +65,8 @@ module type IFSEQ = sig
      in turn is passed to the loop body [k]. *)
   val foreach: 'a seq -> ('a -> unit) -> unit
 
+  (* [to_seq s] produces an explicit representation of the sequence [s] as an
+     sequence in the sense of OCaml's standard library module [Seq]. *)
+  val to_seq: 'a seq -> 'a Seq.t
+
 end

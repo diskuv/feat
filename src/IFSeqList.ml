@@ -55,3 +55,12 @@ let get =
 
 let foreach s k =
   List.iter k s
+
+let rec to_seq xs =
+  (* this is [Seq.of_list] *)
+  fun () ->
+    match xs with
+    | [] ->
+        Seq.Nil
+    | x :: xs ->
+        Seq.Cons (x, to_seq xs)
