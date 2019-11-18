@@ -1,7 +1,7 @@
-open SeqSig
+open IFSeqSig
 
-(* This is an implementation of sequences as syntax, that is, algebraic data
-   structures. *)
+(* This is an implementation of implicit finite sequences as syntax,
+   that is, algebraic data structures. *)
 
 (* In this implementation, the constructors have time complexity O(1),
    under the assumption that the arithmetic operations provided by [Z]
@@ -22,4 +22,4 @@ module Make (Z : sig
   exception Overflow
   val to_int: t -> int
 end)
-: SEQ with type index = Z.t
+: IFSEQ with type index = Z.t

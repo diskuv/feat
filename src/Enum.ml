@@ -3,31 +3,31 @@
 (* Core combinators. *)
 
 type 'a enum =
-  int -> 'a Seq.seq
+  int -> 'a IFSeq.seq
 
 let empty : 'a enum =
   fun _s ->
-    Seq.empty
+    IFSeq.empty
 
 let zero =
   empty
 
-let enum (xs : 'a Seq.seq) : 'a enum =
+let enum (xs : 'a IFSeq.seq) : 'a enum =
   fun s ->
-    if s = 0 then xs else Seq.empty
+    if s = 0 then xs else IFSeq.empty
 
 let just (x : 'a) : 'a enum =
-  (* enum (Seq.singleton x) *)
+  (* enum (IFSeq.singleton x) *)
   fun s ->
-    if s = 0 then Seq.singleton x else Seq.empty
+    if s = 0 then IFSeq.singleton x else IFSeq.empty
 
 let pay (enum : 'a enum) : 'a enum =
   fun s ->
-    if s = 0 then Seq.empty else enum (s-1)
+    if s = 0 then IFSeq.empty else enum (s-1)
 
 let sum (enum1 : 'a enum) (enum2 : 'a enum) : 'a enum =
   fun s ->
-    Seq.sum (enum1 s) (enum2 s)
+    IFSeq.sum (enum1 s) (enum2 s)
 
 let ( ++ ) =
   sum
@@ -46,10 +46,10 @@ let rec up i j =
 
 let product (enum1 : 'a enum) (enum2 : 'b enum) : ('a * 'b) enum =
   fun s ->
-    Seq.bigsum (
+    IFSeq.bigsum (
       List.map (fun s1 ->
         let s2 = s - s1 in
-        Seq.product (enum1 s1) (enum2 s2)
+        IFSeq.product (enum1 s1) (enum2 s2)
       ) (up 0 s)
     )
 
@@ -60,19 +60,19 @@ let balanced_product (enum1 : 'a enum) (enum2 : 'b enum) : ('a * 'b) enum =
   fun s ->
     if s mod 2 = 0 then
       let s = s / 2 in
-      Seq.product (enum1 s) (enum2 s)
+      IFSeq.product (enum1 s) (enum2 s)
     else
       let s = s / 2 in
-      Seq.sum
-        (Seq.product (enum1 s) (enum2 (s+1)))
-        (Seq.product (enum1 (s+1)) (enum2 s))
+      IFSeq.sum
+        (IFSeq.product (enum1 s) (enum2 (s+1)))
+        (IFSeq.product (enum1 (s+1)) (enum2 s))
 
 let ( *-* ) =
   balanced_product
 
 let map (phi : 'a -> 'b) (enum : 'a enum) : 'b enum =
   fun s ->
-    Seq.map phi (enum s)
+    IFSeq.map phi (enum s)
 
 (* -------------------------------------------------------------------------- *)
 

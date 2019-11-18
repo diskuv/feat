@@ -13,7 +13,7 @@
    ordinary recursive definitions. *)
 
 type 'a enum =
-  int -> 'a Seq.seq
+  int -> 'a IFSeq.seq
 
 (* [empty] is the empty enumeration. *)
 val empty: 'a enum
@@ -25,7 +25,7 @@ val just: 'a -> 'a enum
 
 (* The enumeration [enum x] contains the elements in the sequence [xs].
    Their size is considered to be zero. *)
-val enum: 'a Seq.seq -> 'a enum
+val enum: 'a IFSeq.seq -> 'a enum
 
 (* The enumeration [pay e] contains the same elements as [e],
    but their size is increased by one. *)

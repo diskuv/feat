@@ -1,8 +1,8 @@
-(* This is an implementation of sequences as syntax, that is, algebraic data
-   structures. This style should be more efficient than the one used in
-   SeqObj, because fewer memory blocks are allocated (one block per construct
-   instead of typically three) and because it opens the door to rebalancing
-   schemes -- e.g., trees of binary [Sum] nodes can be balanced. *)
+(* This is an implementation of implicit finite sequences as syntax, that is,
+   algebraic data structures. This style should be more efficient than the one
+   used in IFSeqObj, because fewer memory blocks are allocated (one block per
+   construct instead of typically three) and because it opens the door to
+   rebalancing schemes -- e.g., trees of binary [Sum] nodes can be balanced. *)
 
 (* In this implementation, the constructors have time complexity O(1),
    under the assumption that the arithmetic operations provided by [Z]

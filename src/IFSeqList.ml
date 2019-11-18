@@ -1,5 +1,3 @@
-(* This is a naive implementation of sequences as lists. *)
-
 (* No need to use unbounded integers here, since we will run out of time and
    memory before an overflow occurs. *)
 
