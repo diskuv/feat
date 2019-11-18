@@ -209,4 +209,46 @@ let rec foreach : type a . a seq -> bool -> (a -> unit) -> unit =
 let foreach s f =
   foreach s true f
 
+module SSeq = struct
+
+  include Stdlib.Seq
+
+  let cons x xs =
+    fun () -> Cons (x, xs)
+
+end
+
+let rec interval sense a b cons k =
+  if a < b then
+    let x, a, b = if sense then a, a+1, b else b-1, a, b-1 in
+    cons x (fun () -> interval sense a b cons k ())
+  else
+    k
+
+let rec to_seq : type a b . a seq -> bool -> (a -> b SSeq.t -> b SSeq.t) -> b SSeq.t -> b SSeq.t =
+  fun s sense cons k ->
+    match s with
+    | Empty ->
+        k
+    | Singleton x ->
+        cons x k
+    | Rev (_, s) ->
+        to_seq s (not sense) cons k
+    | Sum (_, s1, s2) ->
+        let s1, s2 = if sense then s1, s2 else s2, s1 in
+        to_seq s1 sense cons (fun () -> to_seq s2 sense cons k ())
+    | Product (_, s1, s2) ->
+        to_seq s1 sense (fun x1 k ->
+          to_seq s2 sense (fun x2 k ->
+            cons (x1, x2) k
+          ) k
+        ) k
+    | Map (_, phi, s) ->
+        to_seq s sense (fun x k -> cons (phi x) k) k
+    | Up (a, b) ->
+        interval sense a b cons k
+
+let to_seq s =
+  to_seq s true SSeq.cons SSeq.empty
+
 end
