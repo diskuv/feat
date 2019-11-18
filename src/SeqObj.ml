@@ -79,14 +79,9 @@ let sum s1 s2 =
     if Z.lt i s1.length then s1.get i
     else s2.get (Z.sub i s1.length)
   and foreach sense k =
-    if sense then begin
-      s1.foreach sense k;
-      s2.foreach sense k
-    end
-    else begin
-      s2.foreach sense k;
-      s1.foreach sense k
-    end
+    let s1, s2 = if sense then s1, s2 else s2, s1 in
+    s1.foreach sense k;
+    s2.foreach sense k
   in
   { length; get; foreach }
 

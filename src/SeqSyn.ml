@@ -185,14 +185,9 @@ let rec foreach : type a . a seq -> bool -> (a -> unit) -> unit =
     | Rev (_, s) ->
         foreach s (not sense) k
     | Sum (_, s1, s2) ->
-        if sense then begin
-          foreach s1 sense k;
-          foreach s2 sense k
-        end
-        else begin
-          foreach s2 sense k;
-          foreach s1 sense k
-        end
+        let s1, s2 = if sense then s1, s2 else s2, s1 in
+        foreach s1 sense k;
+        foreach s2 sense k
     | Product (_, s1, s2) ->
         foreach s1 sense (fun x1 ->
           foreach s2 sense (fun x2 ->
