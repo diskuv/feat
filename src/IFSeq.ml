@@ -38,4 +38,4 @@ let rec sample (m : int) (s : 'a seq) : 'a Seq.t =
    otherwise produce a randomly chosen sample, as above. *)
 
 let sample (m : int) (s : 'a seq) : 'a Seq.t =
-  if length s <= Z.of_int m then to_seq s else sample m s
+  if length s <= Z.of_int m then to_seq s Seq.empty else sample m s

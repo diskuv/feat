@@ -210,7 +210,7 @@ let foreach s k =
 let cons x xs =
   fun () -> Seq.Cons (x, xs)
 
-let to_seq s =
-  s.to_seq true cons Seq.empty
+let to_seq s k =
+  s.to_seq true cons k
 
 end

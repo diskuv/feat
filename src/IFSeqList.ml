@@ -56,11 +56,11 @@ let get =
 let foreach s k =
   List.iter k s
 
-let rec to_seq xs =
+let rec to_seq xs k =
   (* this is [Seq.of_list] *)
   fun () ->
     match xs with
     | [] ->
-        Seq.Nil
+        k()
     | x :: xs ->
-        Seq.Cons (x, to_seq xs)
+        Seq.Cons (x, to_seq xs k)

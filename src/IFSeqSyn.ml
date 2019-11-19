@@ -265,7 +265,7 @@ let rec to_seq : type a b . a seq -> bool -> (a, b) producer =
 let cons x xs =
   fun () -> Seq.Cons (x, xs)
 
-let to_seq s =
-  to_seq s true cons Seq.empty
+let to_seq s k =
+  to_seq s true cons k
 
 end
