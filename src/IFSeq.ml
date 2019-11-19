@@ -25,17 +25,17 @@ let random_bigint (n : Z.t) : Z.t =
 (* We do not protect against repetitions, as they are unlikely when [s] is
    long. *)
 
-let rec sample (m : int) (s : 'a seq) : 'a Seq.t =
+let rec sample (m : int) (s : 'a seq) (k : 'a Seq.t) : 'a Seq.t =
   if m > 0 then
     fun () ->
       let i = random_bigint (length s) in
       let x = get s i in
-      Seq.Cons (x, sample (m - 1) s)
+      Seq.Cons (x, sample (m - 1) s k)
   else
-    Seq.empty
+    k
 
 (* If the sequence [s] is short enough, then produce all of its elements;
    otherwise produce a randomly chosen sample, as above. *)
 
-let sample (m : int) (s : 'a seq) : 'a Seq.t =
-  if length s <= Z.of_int m then to_seq s Seq.empty else sample m s
+let sample (m : int) (s : 'a seq) (k : 'a Seq.t) : 'a Seq.t =
+  if length s <= Z.of_int m then to_seq s k else sample m s k
