@@ -2,6 +2,6 @@
   (name feat)
   (public_name feat)
   (synopsis "Facilities for enumerating and sampling algebraic data types")
-  (flags "-w" "A")
+  (flags "-w" "A-44")
   (libraries zarith fix)
 )
