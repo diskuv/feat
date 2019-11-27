@@ -92,3 +92,13 @@ let list (elem : 'a enum) : 'a list enum =
   fix (fun list ->
     just [] ++ pay (map cons (elem ** list))
   )
+
+(* -------------------------------------------------------------------------- *)
+
+(* Sampling. *)
+
+let rec sample m e i j k =
+  if i < j then
+    IFSeq.sample m (e i) (fun () -> sample m e (i + 1) j k ())
+  else
+    k

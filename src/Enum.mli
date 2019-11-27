@@ -64,3 +64,11 @@ val bool: bool enum
    one should avoid applying [list] twice to the same argument; that
    would be a waste of time and space. *)
 val list: 'a enum -> 'a list enum
+
+(* [sample m e i j k] is a sequence of at most [m] elements of every size
+   comprised between [i] (included) and [j] (excluded) extracted out of the
+   enumeration [e], prepended in front of the existing sequence [k]. At every
+   size, if there at most [m] elements of this size, then all elements of this
+   size are produced; otherwise, a random sample of [m] elements of this size
+   is produced. *)
+val sample: int -> 'a enum -> int -> int -> 'a Seq.t -> 'a Seq.t
