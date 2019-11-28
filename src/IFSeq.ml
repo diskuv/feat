@@ -8,27 +8,18 @@ include IFSeqSyn.Make(Z)
 let bigsum ss =
   List.fold_left sum zero ss
 
-(* For some reason, [Z.random] does not exist. *)
-(* For some reason, [Random.int] stops working at [2^30]. *)
-(* This is troublesome. *)
-
-let random_bigint (n : Z.t) : Z.t =
-  let open Z in
-  if n < one lsl 30 then
-    Z.of_int (Random.int (Z.to_int n))
-  else
-    failwith "Can't sample over more than 2^30 elements."
-      (* TEMPORARY really unsatisfactory! *)
-
 (* Extract a randomly chosen sample of [m] elements out of a sequence [s]. *)
 
 (* We do not protect against repetitions, as they are unlikely when [s] is
    long. *)
 
+(* For some reason, [Z.random] does not exist, and [Random.int] stops
+   working at [2^30]. [Bigint.random] works around these problems. *)
+
 let rec sample (m : int) (s : 'a seq) (k : 'a Seq.t) : 'a Seq.t =
   if m > 0 then
     fun () ->
-      let i = random_bigint (length s) in
+      let i = Bigint.random (length s) in
       let x = get s i in
       Seq.Cons (x, sample (m - 1) s k)
   else

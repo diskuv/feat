@@ -6,5 +6,3 @@
 
 * Define a combinator [smap] where the user function [f] has access to the
   size of the data.
-
-* Fix [random_bigint] so that it works above 2^30.
