@@ -36,6 +36,11 @@ val pay: 'a enum -> 'a enum
 val sum    : 'a enum -> 'a enum -> 'a enum
 val ( ++ ) : 'a enum -> 'a enum -> 'a enum
 
+(* [exists xs e] is the union of all enumerations of the form [e x], where [x]
+   is drawn from the list [xs]. (This is an indexed sum.) It is up to the user
+   to ensure that the sets [e1] and [e2] are disjoint. *)
+val exists: 'a list -> ('a -> 'b enum) -> 'b enum
+
 (* [product e1 e2] is the Cartesian product of the enumerations
    [e1] and [e2]. *)
 val product: 'a enum -> 'b enum -> ('a * 'b) enum

@@ -8,6 +8,9 @@ include IFSEQ with type index = Z.t
 (* Iterated sum. *)
 val bigsum: 'a seq list -> 'a seq
 
+(* Indexed iterated sum. *)
+val exists: 'a list -> ('a -> 'b seq) -> 'b seq
+
 (* [sample m s k] is an explicit sequence of at most [m] elements extracted
    out of the implicit sequence [s], prepended in front of the existing
    sequence [k]. If [length s] at most [m], then all elements of [s] are

@@ -32,6 +32,10 @@ let sum (enum1 : 'a enum) (enum2 : 'a enum) : 'a enum =
 let ( ++ ) =
   sum
 
+let exists (xs : 'a list) (enum : 'a -> 'b enum) : 'b enum =
+  fun s ->
+    IFSeq.exists xs (fun x -> enum x s)
+
 (* [up i j] is the list of the integers of [i] included up to [j] included. *)
 
 let rec up i j =

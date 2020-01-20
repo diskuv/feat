@@ -8,6 +8,11 @@ include IFSeqSyn.Make(Z)
 let bigsum ss =
   List.fold_left sum zero ss
 
+(* Indexed iterated sum. *)
+
+let exists (xs : 'a list) (s : 'a -> 'b seq) : 'b seq =
+  bigsum (List.map s xs)
+
 (* Extract a randomly chosen sample of [m] elements out of a sequence [s]. *)
 
 (* We do not protect against repetitions, as they are unlikely when [s] is
