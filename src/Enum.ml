@@ -82,8 +82,6 @@ let map (phi : 'a -> 'b) (enum : 'a enum) : 'b enum =
 
 (* Convenience functions. *)
 
-open Fix.Memoize.Int
-
 let finite (xs : 'a list) : 'a enum =
   List.fold_left (++) zero (List.map just xs)
 
@@ -93,7 +91,7 @@ let bool : bool enum =
 
 let list (elem : 'a enum) : 'a list enum =
   let cons (x, xs) = x :: xs in
-  fix (fun list ->
+  Fix.Memoize.Int.fix (fun list ->
     just [] ++ pay (map cons (elem ** list))
   )
 
