@@ -95,6 +95,16 @@ let list (elem : 'a enum) : 'a list enum =
     just [] ++ pay (map cons (elem ** list))
   )
 
+let dlist fix elem =
+  let cons x xs = x :: xs in
+  fix (fun dlist env ->
+    just [] ++ pay (
+      exists (elem env) (fun (x, env') ->
+        map (cons x) (dlist env')
+      )
+    )
+  )
+
 (* -------------------------------------------------------------------------- *)
 
 (* Sampling. *)

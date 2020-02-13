@@ -70,6 +70,30 @@ val bool: bool enum
    would be a waste of time and space. *)
 val list: 'a enum -> 'a list enum
 
+(* Suppose we wish to enumerate lists of elements, where the validity of an
+   element depends on which elements have appeared earlier in the list. For
+   instance, we might wish to enumerate lists of instructions, where the set
+   of permitted instructions at some point depends on the environment at this
+   point, and each instruction produces an updated environment. If [fix] is a
+   suitable fixed point combinator and if the function [elem] describes how
+   elements depend on environments and how elements affect environments, then
+   [dlist fix elem] is such an enumeration. Each list node is considered to
+   have size 1. Because the function [elem] produces a list (as opposed to an
+   enumeration), an element does not have a size. *)
+
+(* The fixed point combinator [fix] is typically of the form [curried fix],
+   where [fix] is a fixed point combinator for keys of type ['env * int].
+   Memoization takes place at keys that are pairs of an environment and a
+   size. *)
+
+(* The function [elem] receives an environment and must return a list of pairs
+   of an element and an updated environment. *)
+
+val dlist:
+  ('env -> 'a list enum) Fix.fix ->
+  ('env -> ('a * 'env) list) ->
+  ('env -> 'a list enum)
+
 (* [sample m e i j k] is a sequence of at most [m] elements of every size
    comprised between [i] (included) and [j] (excluded) extracted out of the
    enumeration [e], prepended in front of the existing sequence [k]. At every
