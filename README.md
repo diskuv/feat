@@ -13,7 +13,7 @@ although a detailed comparison has not been carried out.
 
 The library is laid out as follows:
 
-* The module [Feat.IFSeq](src/IFSeq.ml) implements
+* The module [Feat.IFSeq](src/IFSeq.mli) implements
   the signature [Feat.IFSEQ](src/IFSeqSig.ml)
   of (implicit, finite) **sequences**.
 
@@ -29,7 +29,7 @@ The library is laid out as follows:
   An enumeration of type `'a enum` is a function of a size `s`
   to a sequence of elements of size `s`.
 
-* The module [Feat.Bigint](src/Bigint.mli)
+* The module [Feat.Bigint](src/bigint.mli)
   offers a function `random` of type `Z.t -> Z.t`,
   thus repairing an unfortunate omission in the library `zarith`.
 
