@@ -1,10 +1,10 @@
 (* A signature for implicit finite sequences. *)
 
-(* This sequences are implicit, which means that they are not explicitly
-   represented in memory as an actual sequence of elements; instead, they are
-   *described* by a data structure which contains enough information to
-   produce an arbitrary element upon request. This design decision imposes
-   some constraints on the operations that can be efficiently supported; for
+(* These sequences are implicit, which means that they are not explicitly
+   represented in memory as actual sequences of elements; instead, they are
+   described by a data structure which contains enough information to produce
+   an arbitrary element upon request. This design decision imposes some
+   constraints on the operations that can be efficiently supported; for
    instance, [filter] is not supported. *)
 
 (* This signature forms an applicative functor. *)
