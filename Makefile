@@ -86,3 +86,36 @@ release:
 publish:
 # Publish an opam description.
 	@ opam publish -v $(DATE) $(THIS) $(ARCHIVE) .
+
+# [make versions] compiles and tests under many versions of OCaml,
+# whose list is specified below.
+
+VERSIONS := \
+  4.03.0 \
+  4.04.2 \
+  4.05.0 \
+  4.06.1 \
+  4.07.1 \
+  4.08.1 \
+  4.09.1 \
+  4.09.0+bytecode-only \
+  4.10.0 \
+  4.11.1 \
+
+.PHONY: versions
+versions:
+	@(echo "(lang dune 2.0)" && \
+	  for v in $(VERSIONS) ; do \
+	    echo "(context (opam (switch $$v)))" ; \
+	  done) > dune-workspace.versions
+	@ dune build --workspace dune-workspace.versions @install # or: @all
+
+.PHONY: handiwork
+handiwork:
+	@ current=`opam switch show` ; \
+	  for v in $(VERSIONS) ; do \
+	    opam switch $$v && \
+	    eval $$(opam env) && \
+	    opam install --yes zarith seq fix.20201120 ; \
+	  done ; \
+	  opam switch $$current
