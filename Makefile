@@ -71,6 +71,7 @@ release:
 	@ make uninstall
 	@ make clean
 	@ make install
+	@ make uninstall
 # Check the current package description.
 	@ opam lint
 # Check if everything has been committed.
@@ -113,7 +114,7 @@ versions:
 	  for v in $(VERSIONS) ; do \
 	    echo "(context (opam (switch $$v)))" ; \
 	  done) > dune-workspace.versions
-	@ dune build --workspace dune-workspace.versions @all
+	@ dune build --workspace dune-workspace.versions @install
 
 .PHONY: handiwork
 handiwork:
