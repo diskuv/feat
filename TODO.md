@@ -1,8 +1,12 @@
-* Test. Check that [length], [get], [foreach] and [to_seq] are consistent.
+## TO DO
 
-* Test. Check that [foreach] is faster than iterated [get].
+* Write some documentation.
 
-* Try implementing a balancing scheme for [Sum]?
+* Test. Check that `length`, `get`, `foreach` and `to_seq` are consistent.
 
-* Define a combinator [smap] where the user function [f] has access to the
+* Test. Check that `foreach` is faster than iterated `get`.
+
+* Try implementing a balancing scheme for `Sum`?
+
+* Define a combinator `smap` where the user function `f` has access to the
   size of the data.
