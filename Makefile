@@ -17,16 +17,20 @@ ARCHIVE  := $(REPO)/repository/$(DATE)/archive.tar.gz
 
 .PHONY: all
 all:
-	dune build -p $(THIS)
+	dune build @all
 
 .PHONY: install
-install: all
+install:
 	dune install -p $(THIS)
 
 .PHONY: clean
 clean:
 	rm -f *~ src/*~
 	dune clean
+
+.PHONY: test
+test:
+	dune runtest
 
 .PHONY: uninstall
 uninstall:
@@ -108,7 +112,7 @@ versions:
 	  for v in $(VERSIONS) ; do \
 	    echo "(context (opam (switch $$v)))" ; \
 	  done) > dune-workspace.versions
-	@ dune build --workspace dune-workspace.versions @install # or: @all
+	@ dune build --workspace dune-workspace.versions @all
 
 .PHONY: handiwork
 handiwork:
