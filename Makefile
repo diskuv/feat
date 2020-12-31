@@ -93,6 +93,34 @@ publish:
 # Publish an opam description.
 	@ opam publish -v $(DATE) $(THIS) $(ARCHIVE) .
 
+DOCDIR = _build/default/_doc/_html
+DOC    = $(DOCDIR)/index.html
+CSS    = $(DOCDIR)/odoc.css
+
+# ------------------------------------------------------------------------------
+
+.PHONY: doc
+doc:
+	@ dune build @doc
+	@ sed -i.bak 's/font-weight: 500;/font-weight: bold;/' $(CSS) && rm -f $(CSS).bak
+	@ echo "You can view the documentation by typing 'make view'".
+
+.PHONY: view
+view: doc
+	@ echo Attempting to open $(DOC)...
+	@ if command -v firefox > /dev/null ; then \
+	  firefox $(DOC) ; \
+	else \
+	  open -a /Applications/Firefox.app/ $(DOC) ; \
+	fi
+
+.PHONY: export
+export: doc
+	ssh yquem.inria.fr rm -rf public_html/$(THIS)/doc
+	scp -r $(DOCDIR) yquem.inria.fr:public_html/$(THIS)/doc
+
+# ------------------------------------------------------------------------------
+
 # [make versions] compiles and tests under many versions of OCaml,
 # whose list is specified below.
 
