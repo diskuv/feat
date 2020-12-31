@@ -21,6 +21,7 @@ all:
 
 .PHONY: install
 install:
+	dune build -p $(THIS)
 	dune install -p $(THIS)
 
 .PHONY: clean
