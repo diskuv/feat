@@ -1,3 +1,13 @@
+(******************************************************************************)
+(*                                                                            *)
+(*                                     Feat                                   *)
+(*                                                                            *)
+(*                        François Pottier, Inria Paris                       *)
+(*                                                                            *)
+(*  Copyright Inria. All rights reserved. This file is distributed under the  *)
+(*  terms of the MIT license, as described in the file LICENSE.               *)
+(******************************************************************************)
+
 (* The default implementation of the signature SEQ is based on IFSeqSyn,
    instantiated with the unbounded integers provided by [zarith]. *)
 

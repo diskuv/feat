@@ -1,3 +1,13 @@
+(******************************************************************************)
+(*                                                                            *)
+(*                                     Feat                                   *)
+(*                                                                            *)
+(*                        François Pottier, Inria Paris                       *)
+(*                                                                            *)
+(*  Copyright Inria. All rights reserved. This file is distributed under the  *)
+(*  terms of the MIT license, as described in the file LICENSE.               *)
+(******************************************************************************)
+
 (* This is an implementation of implicit finite sequences as syntax, that is,
    algebraic data structures. This style should be more efficient than the one
    used in IFSeqObj, because fewer memory blocks are allocated (one block per

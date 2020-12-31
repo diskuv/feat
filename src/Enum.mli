@@ -1,3 +1,13 @@
+(******************************************************************************)
+(*                                                                            *)
+(*                                     Feat                                   *)
+(*                                                                            *)
+(*                        François Pottier, Inria Paris                       *)
+(*                                                                            *)
+(*  Copyright Inria. All rights reserved. This file is distributed under the  *)
+(*  terms of the MIT license, as described in the file LICENSE.               *)
+(******************************************************************************)
+
 (* An enumeration of type ['a enum] can be loosely thought of as a set of
    values of type ['a], equipped with a notion of size. More precisely, it
    is a function of a size [s] to a subset of inhabitants of size [s],

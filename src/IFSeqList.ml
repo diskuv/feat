@@ -1,3 +1,13 @@
+(******************************************************************************)
+(*                                                                            *)
+(*                                     Feat                                   *)
+(*                                                                            *)
+(*                        François Pottier, Inria Paris                       *)
+(*                                                                            *)
+(*  Copyright Inria. All rights reserved. This file is distributed under the  *)
+(*  terms of the MIT license, as described in the file LICENSE.               *)
+(******************************************************************************)
+
 (* No need to use unbounded integers here, since we will run out of time and
    memory before an overflow occurs. *)
 
