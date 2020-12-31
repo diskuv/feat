@@ -37,7 +37,7 @@ let list_wb_tree : tree list enum =
 (* Enumerating binary trees with two elements in [0; 1]. *)
 
 let elem : int enum =
-  enum (Feat.Seq.up 0 2)
+  enum (Feat.IFSeq.up 0 2)
 
 let etree : tree enum =
   fix (fun tree ->
@@ -48,7 +48,7 @@ let etree : tree enum =
 
 (* Testing a sequence. *)
 
-open Feat.Seq
+open Feat.IFSeq
 
 let rec subrange i j s accu =
   if i < j then
