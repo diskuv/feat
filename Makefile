@@ -17,25 +17,25 @@ ARCHIVE  := $(REPO)/repository/$(DATE)/archive.tar.gz
 
 .PHONY: all
 all:
-	dune build @all
+	@ dune build @all
 
 .PHONY: install
 install:
-	dune build -p $(THIS)
-	dune install -p $(THIS)
+	@ dune build -p $(THIS)
+	@ dune install -p $(THIS)
 
 .PHONY: clean
 clean:
-	rm -f *~ src/*~
-	dune clean
+	@ rm -f *~ src/*~ dune-workspace.versions
+	@ dune clean
 
 .PHONY: test
 test:
-	dune runtest
+	@ dune runtest
 
 .PHONY: uninstall
 uninstall:
-	ocamlfind remove $(THIS) || true
+	@ ocamlfind remove $(THIS) || true
 
 .PHONY: reinstall
 reinstall: uninstall
@@ -47,11 +47,11 @@ show: reinstall
 
 .PHONY: pin
 pin:
-	opam pin add $(THIS) .
+	@ opam pin add $(THIS) .
 
 .PHONY: unpin
 unpin:
-	opam pin remove $(THIS)
+	@ opam pin remove $(THIS)
 
 # This requires a version of headache that supports UTF-8; please use
 # https://github.com/fpottier/headache
