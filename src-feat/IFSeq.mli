@@ -8,13 +8,23 @@
 (*  terms of the MIT license, as described in the file LICENSE.               *)
 (******************************************************************************)
 
+open FeatCore
 open IFSeqSig
 
-(* This is an implementation of implicit finite sequences as syntax,
-   that is, algebraic data structures. *)
+(* An implementation of the signature SEQ,
+   instantiated with unbounded integers from [Zarith]. *)
 
-(* In this implementation, the constructors have time complexity O(1),
-   under the assumption that the arithmetic operations provided by [Z]
-   cost O(1) as well. *)
+include IFSEQ with type index = Z.t
 
-module Make (Z : Bignum.S) : IFSEQ with type index = Z.t
+(* Iterated sum. *)
+val bigsum: 'a seq list -> 'a seq
+
+(* Indexed iterated sum. *)
+val exists: 'a list -> ('a -> 'b seq) -> 'b seq
+
+(* [sample m s k] is an explicit sequence of at most [m] elements extracted
+   out of the implicit sequence [s], prepended in front of the existing
+   sequence [k]. If [length s] at most [m], then all elements of [s] are
+   produced. Otherwise, a random sample of [m] elements extracted out of
+   [s] is produced. *)
+val sample: int -> 'a seq -> 'a Seq.t -> 'a Seq.t

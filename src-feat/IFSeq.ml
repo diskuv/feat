@@ -9,9 +9,9 @@
 (******************************************************************************)
 
 (* The default implementation of the signature SEQ is based on IFSeqSyn,
-   instantiated with the unbounded integers provided by [zarith]. *)
+   instantiated with the unbounded integers provided by [Zarith]. *)
 
-include IFSeqSyn.Make(Z)
+include FeatCore.IFSeqSyn.Make(Z)
 
 (* Iterated sum. *)
 

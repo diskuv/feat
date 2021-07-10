@@ -16,21 +16,7 @@
    under the assumption that the arithmetic operations provided by [Z]
    cost O(1) as well. *)
 
-module Make (Z : sig
-  type t
-  val zero: t
-  val one: t
-  val of_int: int -> t
-  val pred: t -> t
-  val add: t -> t -> t
-  val sub: t -> t -> t
-  val mul: t -> t -> t
-  val div_rem: t -> t -> t * t
-  val equal: t -> t -> bool
-  val lt: t -> t -> bool
-  exception Overflow
-  val to_int: t -> int
-end) = struct
+module Make (Z : Bignum.S) = struct
 
 type index =
   Z.t

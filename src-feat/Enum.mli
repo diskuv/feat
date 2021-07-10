@@ -8,6 +8,4 @@
 (*  terms of the MIT license, as described in the file LICENSE.               *)
 (******************************************************************************)
 
-(* Uniform random generation of large integers. *)
-
-val random: Z.t -> Z.t
+include FeatCore.EnumFunctorIntf.S with module Ifseq = IFSeq

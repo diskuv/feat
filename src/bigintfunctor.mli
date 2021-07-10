@@ -8,13 +8,10 @@
 (*  terms of the MIT license, as described in the file LICENSE.               *)
 (******************************************************************************)
 
-open IFSeqSig
+[@@@ocaml.warning "-67"]
 
-(* This is an implementation of implicit finite sequences as syntax,
-   that is, algebraic data structures. *)
+(* Uniform random generation of large integers. *)
 
-(* In this implementation, the constructors have time complexity O(1),
-   under the assumption that the arithmetic operations provided by [Z]
-   cost O(1) as well. *)
-
-module Make (Z : Bignum.S) : IFSEQ with type index = Z.t
+module Make (Z : Bignum.S_EXTENDED) (R : RandomSig.S) : sig
+    val random: Z.t -> Z.t
+end

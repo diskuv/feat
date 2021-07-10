@@ -1,7 +1,11 @@
 # ------------------------------------------------------------------------------
 
-# The name of the library.
+# The name of the repository.
 THIS     := feat
+
+# The libraries topologically sorted
+THIS_COMMAS := feat-core,feat,feat-num
+THIS_SPACES := feat-core feat feat-num
 
 # The version number is automatically set to the current date,
 # unless DATE is defined on the command line.
@@ -21,8 +25,8 @@ all:
 
 .PHONY: install
 install:
-	@ dune build -p $(THIS)
-	@ dune install -p $(THIS)
+	@ dune build -p $(THIS_COMMAS)
+	@ dune install -p $(THIS_COMMAS)
 
 .PHONY: clean
 clean:
@@ -35,7 +39,7 @@ test:
 
 .PHONY: uninstall
 uninstall:
-	@ ocamlfind remove $(THIS) || true
+	@ for t in $(THIS_SPACES) ; do ocamlfind remove $$t; done || true
 
 .PHONY: reinstall
 reinstall: uninstall
@@ -43,15 +47,15 @@ reinstall: uninstall
 
 .PHONY: show
 show: reinstall
-	@ echo "#require \"feat\";;\n#show Feat;;" | ocaml
+	@ echo "#require \"feat-core\";;\n#require \"feat\";;\n#require \"feat-num\";;\n#show FeatCore;;\n#show Feat;;\n#show FeatNum;;" | ocaml
 
 .PHONY: pin
 pin:
-	@ opam pin add $(THIS) .
+	@ for t in $(THIS_SPACES) ; do opam pin add $$t .; done
 
 .PHONY: unpin
 unpin:
-	@ opam pin remove $(THIS)
+	@ for t in $(THIS_SPACES) ; do opam pin remove $$t; done
 
 # This requires a version of headache that supports UTF-8; please use
 # https://github.com/fpottier/headache
@@ -91,7 +95,7 @@ release:
 .PHONY: publish
 publish:
 # Publish an opam description.
-	@ opam publish -v $(DATE) $(THIS) $(ARCHIVE) .
+	@ for t in $(THIS_SPACES) ; do opam publish -v $(DATE) $$t $(ARCHIVE) .; done
 
 DOCDIR = _build/default/_doc/_html
 DOC    = $(DOCDIR)/index.html
@@ -136,6 +140,13 @@ VERSIONS := \
   4.10.0 \
   4.11.1 \
 
+.PHONY: switches
+switches:
+	@ for v in $(VERSIONS) ; do \
+	    opam switch create $$v || \
+	    opam install --switch $$v --yes zarith seq fix.20201120 num; \
+	  done
+
 .PHONY: versions
 versions:
 	@(echo "(lang dune 2.0)" && \
@@ -149,7 +160,7 @@ handiwork:
 	@ current=`opam switch show` ; \
 	  for v in $(VERSIONS) ; do \
 	    opam switch $$v && \
-	    eval $$(opam env) && \
-	    opam install --yes zarith seq fix.20201120 ; \
+	    eval $$(opam env --switch=$$v) && \
+	    opam install --yes zarith seq fix.20201120 num; \
 	  done ; \
 	  opam switch $$current

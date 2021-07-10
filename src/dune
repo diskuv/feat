@@ -1,7 +1,7 @@
 (library
-  (name feat)
-  (public_name feat)
+  (name FeatCore)
+  (public_name feat-core)
   (synopsis "Facilities for enumerating and sampling algebraic data types")
   (flags "-w" "A-44")
-  (libraries seq zarith fix)
+  (libraries seq fix)
 )

@@ -8,13 +8,6 @@
 (*  terms of the MIT license, as described in the file LICENSE.               *)
 (******************************************************************************)
 
-open IFSeqSig
-
-(* This is an implementation of implicit finite sequences as syntax,
-   that is, algebraic data structures. *)
-
-(* In this implementation, the constructors have time complexity O(1),
-   under the assumption that the arithmetic operations provided by [Z]
-   cost O(1) as well. *)
-
-module Make (Z : Bignum.S) : IFSEQ with type index = Z.t
+(** Uniform random generation of large integers using the pseudo-random number
+    generator of {!Random.State} and big numbers from [Zarith]. *)
+val random: Z.t -> Z.t

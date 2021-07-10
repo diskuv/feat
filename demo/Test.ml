@@ -1,6 +1,13 @@
+(* Module aliases if you want to swap out implementations without
+   changing the rest of your code. See Feat.ml and FeatNum.ml for
+   examples. *)
+module Ifseq = Feat.IFSeq
+module Enum = Feat.Enum
+module Zseq = Z
+
 open Printf
 open Fix.Memoize.Int
-open Feat.Enum
+open Enum
 
 (* -------------------------------------------------------------------------- *)
 
@@ -37,7 +44,7 @@ let list_wb_tree : tree list enum =
 (* Enumerating binary trees with two elements in [0; 1]. *)
 
 let elem : int enum =
-  enum (Feat.IFSeq.up 0 2)
+  enum (Ifseq.up 0 2)
 
 let etree : tree enum =
   fix (fun tree ->
@@ -48,12 +55,12 @@ let etree : tree enum =
 
 (* Testing a sequence. *)
 
-open Feat.IFSeq
+open Ifseq
 
 let rec subrange i j s accu =
   if i < j then
     let accu = get s i :: accu in
-    subrange (Z.succ i) j s accu
+    subrange (Zseq.succ i) j s accu
   else
     List.rev accu
 
@@ -61,26 +68,26 @@ let subrange i j s =
   subrange i j s []
 
 let range s =
-  subrange Z.zero (length s) s
+  subrange Zseq.zero (length s) s
 
 let test name s =
   printf "Testing %s...\n%!" name;
   (* Test [length]. *)
-  printf "  Length: %s\n%!" (Z.to_string (length s));
+  printf "  Length: %s\n%!" (Zseq.to_string (length s));
   (* By calling [range s], test [get] at every index within range. *)
-  assert (Z.equal (length s) (Z.of_int (List.length (range s))));
+  assert (Zseq.equal (length s) (Zseq.of_int (List.length (range s))));
   printf "  Every random access succeeds.\n";
   (* Test [foreach]. We check that it produces the same elements as [get],
      in the same order, and that it produces neither too few nor too many
      elements. *)
-  let i = ref Z.zero in
+  let i = ref Zseq.zero in
   foreach s (fun x1 ->
-    assert (Z.lt !i (length s));
+    assert (Zseq.lt !i (length s));
     let x2 = get s !i in
     assert (x1 = x2); (* element equality *)
-    i := Z.succ !i
+    i := Zseq.succ !i
   );
-  assert (Z.equal !i (length s));
+  assert (Zseq.equal !i (length s));
   printf "  Iteration via foreach is consistent with random access.\n"
 
 (* -------------------------------------------------------------------------- *)
